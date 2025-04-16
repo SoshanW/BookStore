@@ -1,4 +1,4 @@
-package com.csa.bookstore.model;
+package com.csa.bookstore.entities;
 
 
 /**

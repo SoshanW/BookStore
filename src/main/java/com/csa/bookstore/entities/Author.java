@@ -1,8 +1,8 @@
-package com.csa.bookstore.model;
+package com.csa.bookstore.entities;
 
 /**
  *
- * @author user
+ * @author Soshan Wijayarathne
  */
 public class Author {
     private String name;
