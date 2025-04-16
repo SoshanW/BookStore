@@ -5,13 +5,15 @@ package com.csa.bookstore.entity;
  * @author Soshan Wijayarathne
  */
 public class Author {
+    private int id;
     private String name;
     private String biography;
 
     public Author() {
     }
 
-    public Author(String name, String biography) {
+    public Author(int id, String name, String biography) {
+        this.id = id;
         this.name = name;
         this.biography = biography;
     }
@@ -32,8 +34,18 @@ public class Author {
         this.biography = biography;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     @Override
     public String toString() {
-        return "Author{" + "name=" + name + ", biography=" + biography + '}';
+        return "Author{" + "id=" + id + ", name=" + name + ", biography=" + biography + '}';
     }
+
+    
 }

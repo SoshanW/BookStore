@@ -5,6 +5,7 @@ package com.csa.bookstore.entity;
  * @author Soshan Wijayarathne
  */
 public class Customer {
+    private int id;
     private String name;
     private String email;
     private String password;
@@ -12,10 +13,19 @@ public class Customer {
     public Customer() {
     }
 
-    public Customer(String name, String email, String password) {
+    public Customer(int id, String name, String email, String password) {
+        this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -44,8 +54,7 @@ public class Customer {
 
     @Override
     public String toString() {
-        return "Customer{" + "name=" + name + ", email=" + email + ", password=" + password + '}';
+        return "Customer{" + "id=" + id + ", name=" + name + ", email=" + email + ", password=" + password + '}';
     }
-    
     
 }
