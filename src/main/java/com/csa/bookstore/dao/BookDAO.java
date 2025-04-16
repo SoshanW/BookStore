@@ -40,4 +40,20 @@ public class BookDAO {
         }
         return book;
     }
+    
+    public Book update (String id, Book updatedBook){
+        if(!books.containsKey(id)){
+            throw new BookNotFoundException("Cannot update. Book with ID "+id+" not found");
+        }
+        updatedBook.setISBN(id);
+        books.put(id, updatedBook);
+        return updatedBook;
+    }
+    
+    public void delete(String id){
+        if(!books.containsKey(id)){
+            throw new BookNotFoundException("Cannot delete. Book with ID "+id+" not found");
+        }
+        books.remove(id);
+    }
 }
