@@ -47,7 +47,7 @@ public class AuthorDAO {
         return updatedAuthor;
     }
     
-    public void deleteBook(int id){
+    public void deleteAuthor(int id){
         if(!authors.containsKey(id)){
             throw new AuthorNotFoundException("Cannot delete. Author with ID "+id+" not found");
         }
