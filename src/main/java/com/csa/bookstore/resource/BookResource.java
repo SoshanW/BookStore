@@ -37,25 +37,25 @@ public class BookResource {
     
     @GET
     public Response getAllBooks(){
-        return Response.ok(bookDAO.getAll()).build();
+        return Response.ok(bookDAO.getAllBooks()).build();
     }
     
     @GET
     @Path("/{id}")
     public Response getBook(@PathParam("id") String id){
-        return Response.ok(bookDAO.getById(id)).build();
+        return Response.ok(bookDAO.getBookById(id)).build();
     }
     
     @PUT
     @Path("/{id}")
     public Response updateBook(@PathParam("id")String id, Book updatedBook){
-        return Response.ok(bookDAO.update(id, updatedBook)).build();
+        return Response.ok(bookDAO.updateBook(id, updatedBook)).build();
     }
     
     @DELETE
     @Path("/{id}")
     public Response deleteBook(@PathParam("id")String id){
-        bookDAO.delete(id);
+        bookDAO.deleteBook(id);
         return Response.noContent().build();
     }
 }
