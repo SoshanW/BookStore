@@ -1,5 +1,7 @@
-package com.csa.bookstore.exception;
+package com.csa.bookstore.exception.mapper;
 
+import com.csa.bookstore.exception.BookNotFoundException;
+import com.csa.bookstore.exception.ErrorResponse;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
