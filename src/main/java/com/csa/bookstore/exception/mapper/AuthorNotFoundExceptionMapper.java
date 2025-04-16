@@ -7,7 +7,7 @@ import javax.ws.rs.ext.ExceptionMapper;
 
 /**
  *
- * @author user
+ * @author Soshan Wijayarathne
  */
 public class AuthorNotFoundExceptionMapper implements ExceptionMapper<AuthorNotFoundException>{
 
