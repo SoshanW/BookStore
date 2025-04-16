@@ -1,4 +1,4 @@
-package com.csa.bookstore.dao.exception;
+package com.csa.bookstore.exception;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
@@ -10,7 +10,7 @@ import javax.ws.rs.ext.Provider;
  */
 
 @Provider
-class BookNotFoundExceptionMapper implements ExceptionMapper<BookNotFoundException>{
+public class BookNotFoundExceptionMapper implements ExceptionMapper<BookNotFoundException>{
 
     @Override
     public Response toResponse(BookNotFoundException e) {

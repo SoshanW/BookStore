@@ -1,4 +1,4 @@
-package com.csa.bookstore.dao.exception;
+package com.csa.bookstore.exception;
 
 /**
  *

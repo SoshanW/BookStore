@@ -1,10 +1,10 @@
-package com.csa.bookstore.dao.exception;
+package com.csa.bookstore.exception;
 
 /**
  *
  * @author Soshan Wijayarathne
  */
-class BookNotFoundException extends RuntimeException {
+public class BookNotFoundException extends RuntimeException {
     public BookNotFoundException(String message){
         super(message);
     }
