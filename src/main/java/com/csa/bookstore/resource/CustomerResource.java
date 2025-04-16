@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.csa.bookstore.resource;
 
 import com.csa.bookstore.dao.CustomerDAO;
@@ -9,8 +5,12 @@ import com.csa.bookstore.entity.Customer;
 import com.csa.bookstore.exception.InvalidInputException;
 import java.net.URI;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -19,7 +19,7 @@ import javax.ws.rs.core.UriInfo;
 
 /**
  *
- * @author user
+ * @author Soshan Wijayarathne
  */
 
 @Path("/customers")
@@ -35,6 +35,30 @@ public class CustomerResource {
         Customer addedCustomer = customerDAO.addCustomer(customer);
         URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(addedCustomer.getId())).build();
         return Response.created(uri).entity(addedCustomer).build();
+    }
+    
+    @GET
+    public Response getAllCustomers(){
+        return Response.ok(customerDAO.getAllCustomers()).build();
+    }
+    
+    @GET
+    @Path("/{id}")
+    public Response getCustomerById(@PathParam("id") int id){
+        return Response.ok(customerDAO.getCustomerById(id)).build();
+    }
+    
+    @PUT
+    @Path("/{id}")
+    public Response updateAuthor(@PathParam("id") int id, Customer updatedCustomer) {
+        return Response.ok(customerDAO.updateCustomer(id, updatedCustomer)).build();
+    }
+
+    @DELETE
+    @Path("/{id}")
+    public Response deleteAuthor(@PathParam("id") int id) {
+        customerDAO.deleteCustomer(id);
+        return Response.noContent().build();
     }
 
     private void validateCustomerInput(Customer customer) {

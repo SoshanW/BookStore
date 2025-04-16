@@ -42,7 +42,7 @@ public class BookResource {
     
     @GET
     @Path("/{id}")
-    public Response getBook(@PathParam("id") String id){
+    public Response getBookById(@PathParam("id") String id){
         return Response.ok(bookDAO.getBookById(id)).build();
     }
     

@@ -46,7 +46,7 @@ public class AuthorResource {
 
     @GET
     @Path("/{id}")
-    public Response getAuthor(@PathParam("id") int id) {
+    public Response getAuthorById(@PathParam("id") int id) {
         return Response.ok(authorDAO.getAuthorById(id)).build();
     }
 

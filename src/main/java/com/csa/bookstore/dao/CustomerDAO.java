@@ -27,7 +27,7 @@ public class CustomerDAO {
         return new ArrayList<>(customers.values());
     }
     
-    public Customer getCustomerBCustomerById(int id){
+    public Customer getCustomerById(int id){
         Customer customer = customers.get(id);
         if (customer == null){
             throw new CustomerNotFoundException("Customer "+id+" not found");
