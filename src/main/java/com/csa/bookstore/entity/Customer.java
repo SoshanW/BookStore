@@ -1,4 +1,4 @@
-package com.csa.bookstore.entities;
+package com.csa.bookstore.entity;
 
 /**
  *
@@ -40,6 +40,11 @@ public class Customer {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Override
+    public String toString() {
+        return "Customer{" + "name=" + name + ", email=" + email + ", password=" + password + '}';
     }
     
     
