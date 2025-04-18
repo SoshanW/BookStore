@@ -63,12 +63,24 @@ public class CartResource {
     @PUT
     @Path("/item/{bookId}")
     public Response updateItem(@PathParam("customerId") int customerId,
-            @PathParam("bookId") String bookId, 
-            int newQuantity){
+                              @PathParam("bookId") String bookId, 
+                              int newQuantity) {
         validateCustomer(customerId);
-        checkStock(bookId, newQuantity);
-        
+
+        // Get old quantity
+        int oldQuantity = cartDAO.getCart(customerId).get(bookId).getQuantity();
+
+        // Check stock for the difference
+        int diff = newQuantity - oldQuantity;
+        int stock = bookDAO.getBookById(bookId).getStockQuantity();
+        if (stock < diff) {
+            throw new OutOfStockException("Only " + stock + " items available");
+        }
+
+        // Update cart and book stock
         cartDAO.updateItem(customerId, bookId, newQuantity);
+        bookDAO.getBookById(bookId).setStockQuantity(stock - diff);
+
         return Response.ok().build();
     }
     
