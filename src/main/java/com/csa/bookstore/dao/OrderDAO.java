@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.csa.bookstore.dao;
 
 import com.csa.bookstore.entity.Order;
@@ -15,7 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  *
- * @author user
+ * @author Soshan Wijayarathne
  */
 public class OrderDAO {
     private static final Map<Integer, Order> orders = new ConcurrentHashMap<>();
