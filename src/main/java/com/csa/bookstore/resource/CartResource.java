@@ -92,6 +92,15 @@ public class CartResource {
         cartDAO.removeItem(customerId, bookId);
         return Response.noContent().build();
     }
+    
+    @DELETE
+    @Path("/items")
+    public Response clearCart(@PathParam("customerId") int customerId) {
+        validateCustomer(customerId);
+        cartDAO.clearCart(customerId);
+        return Response.noContent().build();
+    }
+
 
     private void validateCustomer(int customerId) {
         customerDAO.getCustomerById(customerId);
