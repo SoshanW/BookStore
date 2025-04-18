@@ -5,6 +5,8 @@ import com.csa.bookstore.dao.CartDAO;
 import com.csa.bookstore.dao.CustomerDAO;
 import com.csa.bookstore.entity.Cart;
 import com.csa.bookstore.exception.OutOfStockException;
+import java.util.Map;
+import java.util.stream.Collectors;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -45,8 +47,18 @@ public class CartResource {
     @GET
     public Response getCart(@PathParam("customerId") int customerId){
         validateCustomer(customerId);
-        return Response.ok(cartDAO.getCart(customerId)).build();
+        Map<String, Cart> cart = cartDAO.getCart(customerId);
+
+        // Transform cart: key = book title, value = Cart object
+        Map<String, Cart> cartWithTitles = cart.entrySet().stream()
+            .collect(Collectors.toMap(
+                entry -> bookDAO.getBookById(entry.getKey()).getTitle(),
+                Map.Entry::getValue
+            ));
+
+        return Response.ok(cartWithTitles).build();
     }
+
     
     @PUT
     @Path("/item/{bookId}")
