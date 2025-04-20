@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Logger;
 
 /**
  *
@@ -15,6 +16,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class AuthorDAO {
     private static final Map<Integer, Author> authors = new ConcurrentHashMap<>();
     private static final AtomicInteger idCounter = new AtomicInteger(2000);
+    private static final Logger logger = Logger.getLogger(AuthorDAO.class.getName());
 
     public AuthorDAO() {
     }
@@ -23,36 +25,42 @@ public class AuthorDAO {
         int id = idCounter.incrementAndGet();
         author.setId(id);
         authors.put(id, author);
+        logger.info("Added author: " + author);
         return author;
     }
-    
+
     public List<Author> getAllAuthors(){
+        logger.info("Fetching all authors");
         return new ArrayList<>(authors.values());
     }
-    
+
     public Author getAuthorById(int id){
         Author author = authors.get(id);
         if(author == null) {
+            logger.warning("Author not found: " + id);
             throw new AuthorNotFoundException("Author "+id+" not found");
         }
+        logger.info("Fetched author: " + author);
         return author;
     }
-    
+
     public Author updateAuthor(int id, Author updatedAuthor){
         if(!authors.containsKey(id)){
+            logger.warning("Attempted update on missing author: " + id);
             throw new AuthorNotFoundException("Cannot update. Author with ID "+id+" not found");
         }
         updatedAuthor.setId(id);
         authors.put(id, updatedAuthor);
+        logger.info("Updated author: " + updatedAuthor);
         return updatedAuthor;
     }
-    
+
     public void deleteAuthor(int id){
         if(!authors.containsKey(id)){
+            logger.warning("Attempted delete on missing author: " + id);
             throw new AuthorNotFoundException("Cannot delete. Author with ID "+id+" not found");
         }
         authors.remove(id);
+        logger.info("Deleted author with ID: " + id);
     }
-    
-
 }
