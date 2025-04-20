@@ -33,16 +33,19 @@ public class OrderDAO {
         return order;
     }
 
-    public List<Order> gerOrderByCustomer(int customerId){
+    public List<Order> getOrdersByCustomer(int customerId) {
         List<Order> result = new ArrayList<>();
-        for(Order order: orders.values()){
-            if(order.getCustomerId() == customerId){
+        for(Order order : orders.values()) {
+            if(order.getCustomerId() == customerId) {
                 result.add(order);
             }
         }
-        logger.log(Level.INFO, "Fetched orders for customer: {0}", customerId);
+        if(result.isEmpty()) {
+            throw new OrderNotFoundException("No orders found for customer: " + customerId);
+        }
         return result;
     }
+
 
     public Order getOrderById(int orderId){
         Order order = orders.get(orderId);

@@ -58,10 +58,10 @@ public class OrderResource {
 
     @GET
     public Response getOrdersByCustomerId(@PathParam("customerId") int customerId) {
-        logger.log(Level.INFO, "GET /customers/{0}/orders - Fetching orders for customer", customerId);
         customerDAO.getCustomerById(customerId);
-        return Response.ok(orderDAO.gerOrderByCustomer(customerId)).build();
+        return Response.ok(orderDAO.getOrdersByCustomer(customerId)).build();
     }
+
 
     @GET
     @Path("/{orderId}")

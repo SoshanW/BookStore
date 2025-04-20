@@ -4,11 +4,13 @@ import com.csa.bookstore.exception.AuthorNotFoundException;
 import com.csa.bookstore.exception.ErrorResponse;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
+import javax.ws.rs.ext.Provider;
 
 /**
  *
  * @author Soshan Wijayarathne
  */
+@Provider
 public class AuthorNotFoundExceptionMapper implements ExceptionMapper<AuthorNotFoundException>{
 
     @Override
