@@ -34,15 +34,15 @@ public class CustomerResource {
 
     @POST
     public Response addCustomer(Customer customer, @Context UriInfo uriInfo){
-        logger.info("POST /customers - Request to add customer: " + customer);
+        logger.log(Level.INFO, "POST /customers - Request to add customer: {0}", customer);
         try {
             validateCustomerInput(customer);
             Customer addedCustomer = customerDAO.addCustomer(customer);
             URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(addedCustomer.getId())).build();
-            logger.info("Customer created with ID: " + addedCustomer.getId());
+            logger.log(Level.INFO, "Customer created with ID: {0}", addedCustomer.getId());
             return Response.created(uri).entity(addedCustomer).build();
         } catch (InvalidInputException e) {
-            logger.warning("Invalid customer input: " + e.getMessage());
+            logger.log(Level.WARNING, "Invalid customer input: {0}", e.getMessage());
             throw e;
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Unexpected error adding customer", e);
@@ -59,23 +59,23 @@ public class CustomerResource {
     @GET
     @Path("/{id}")
     public Response getCustomerById(@PathParam("id") int id){
-        logger.info("GET /customers/" + id + " - Fetching customer by ID");
+        logger.log(Level.INFO, "GET /customers/{0} - Fetching customer by ID", id);
         return Response.ok(customerDAO.getCustomerById(id)).build();
     }
 
     @PUT
     @Path("/{id}")
     public Response updateAuthor(@PathParam("id") int id, Customer updatedCustomer) {
-        logger.info("PUT /customers/" + id + " - Updating customer: " + updatedCustomer);
+        logger.log(Level.INFO, "PUT /customers/{0} - Updating customer: {1}", new Object[]{id, updatedCustomer});
         return Response.ok(customerDAO.updateCustomer(id, updatedCustomer)).build();
     }
 
     @DELETE
     @Path("/{id}")
     public Response deleteAuthor(@PathParam("id") int id) {
-        logger.info("DELETE /customers/" + id + " - Deleting customer");
+        logger.log(Level.INFO, "DELETE /customers/{0} - Deleting customer", id);
         customerDAO.deleteCustomer(id);
-        logger.info("Customer deleted with ID: " + id);
+        logger.log(Level.INFO, "Customer deleted with ID: {0}", id);
         return Response.noContent().build();
     }
 
@@ -83,7 +83,7 @@ public class CustomerResource {
         if (customer.getName() == null || customer.getName().trim().isEmpty() ||
             customer.getEmail() == null || !customer.getEmail().contains("@") ||
             customer.getPassword() == null || customer.getPassword().length() < 4) {
-            logger.warning("Validation failed for customer input: " + customer);
+            logger.log(Level.WARNING, "Validation failed for customer input: {0}", customer);
             throw new InvalidInputException("Invalid customer data. Name, valid email, and password (min 4 chars) required");
         }
     }

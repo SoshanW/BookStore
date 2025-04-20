@@ -6,6 +6,7 @@ import com.csa.bookstore.dao.CustomerDAO;
 import com.csa.bookstore.entity.Cart;
 import com.csa.bookstore.exception.OutOfStockException;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.ws.rs.Consumes;
@@ -36,20 +37,20 @@ public class CartResource {
     @POST
     @Path("/items")
     public Response addItem(@PathParam("customerId") int customerId, Cart cart){
-        logger.info("POST /customer/" + customerId + "/cart/items - Adding item: " + cart);
+        logger.log(Level.INFO, "POST /customer/{0}/cart/items - Adding item: {1}", new Object[]{customerId, cart});
         validateCustomer(customerId);
         validateBook(cart.getBookId());
         checkStock(cart.getBookId(), cart.getQuantity());
         cartDAO.addItem(customerId, cart.getBookId(), cart.getQuantity());
         bookDAO.getBookById(cart.getBookId())
                .setStockQuantity(bookDAO.getBookById(cart.getBookId()).getStockQuantity() - cart.getQuantity());
-        logger.info("Item added to cart for customer " + customerId + ": " + cart);
+        logger.log(Level.INFO, "Item added to cart for customer {0}: {1}", new Object[]{customerId, cart});
         return Response.ok().build();
     }
 
     @GET
     public Response getCart(@PathParam("customerId") int customerId){
-        logger.info("GET /customer/" + customerId + "/cart - Fetching cart");
+        logger.log(Level.INFO, "GET /customer/{0}/cart - Fetching cart", customerId);
         validateCustomer(customerId);
         Map<String, Cart> cart = cartDAO.getCart(customerId);
         Map<String, Cart> cartWithTitles = cart.entrySet().stream()
@@ -65,18 +66,18 @@ public class CartResource {
     public Response updateItem(@PathParam("customerId") int customerId,
                               @PathParam("bookId") String bookId,
                               int newQuantity) {
-        logger.info("PUT /customer/" + customerId + "/cart/item/" + bookId + " - Updating quantity to " + newQuantity);
+        logger.log(Level.INFO, "PUT /customer/{0}/cart/item/{1} - Updating quantity to {2}", new Object[]{customerId, bookId, newQuantity});
         validateCustomer(customerId);
         int oldQuantity = cartDAO.getCart(customerId).get(bookId).getQuantity();
         int diff = newQuantity - oldQuantity;
         int stock = bookDAO.getBookById(bookId).getStockQuantity();
         if (stock < diff) {
-            logger.warning("Not enough stock for book " + bookId + ": requested diff=" + diff + ", available=" + stock);
+            logger.log(Level.WARNING, "Not enough stock for book {0}: requested diff={1}, available={2}", new Object[]{bookId, diff, stock});
             throw new OutOfStockException("Only " + stock + " items available");
         }
         cartDAO.updateItem(customerId, bookId, newQuantity);
         bookDAO.getBookById(bookId).setStockQuantity(stock - diff);
-        logger.info("Cart item updated for customer " + customerId + ", book " + bookId);
+        logger.log(Level.INFO, "Cart item updated for customer {0}, book {1}", new Object[]{customerId, bookId});
         return Response.ok().build();
     }
 
@@ -84,37 +85,37 @@ public class CartResource {
     @Path("/items/{bookId}")
     public Response removeItem(@PathParam("customerId") int customerId,
                               @PathParam("bookId") String bookId) {
-        logger.info("DELETE /customer/" + customerId + "/cart/items/" + bookId + " - Removing item");
+        logger.log(Level.INFO, "DELETE /customer/{0}/cart/items/{1} - Removing item", new Object[]{customerId, bookId});
         validateCustomer(customerId);
         cartDAO.removeItem(customerId, bookId);
-        logger.info("Item removed from cart for customer " + customerId + ", book " + bookId);
+        logger.log(Level.INFO, "Item removed from cart for customer {0}, book {1}", new Object[]{customerId, bookId});
         return Response.noContent().build();
     }
 
     @DELETE
     @Path("/items")
     public Response clearCart(@PathParam("customerId") int customerId) {
-        logger.info("DELETE /customer/" + customerId + "/cart/items - Clearing cart");
+        logger.log(Level.INFO, "DELETE /customer/{0}/cart/items - Clearing cart", customerId);
         validateCustomer(customerId);
         cartDAO.clearCart(customerId);
-        logger.info("Cart cleared for customer " + customerId);
+        logger.log(Level.INFO, "Cart cleared for customer {0}", customerId);
         return Response.noContent().build();
     }
 
     private void validateCustomer(int customerId) {
-        logger.fine("Validating customer " + customerId);
+        logger.log(Level.FINE, "Validating customer {0}", customerId);
         customerDAO.getCustomerById(customerId);
     }
 
     private void validateBook(String bookId) {
-        logger.fine("Validating book " + bookId);
+        logger.log(Level.FINE, "Validating book {0}", bookId);
         bookDAO.getBookById(bookId);
     }
 
     private void checkStock(String bookId, int quantity) {
         int stock = bookDAO.getBookById(bookId).getStockQuantity();
         if (stock < quantity) {
-            logger.warning("Not enough stock for book " + bookId + ": requested=" + quantity + ", available=" + stock);
+            logger.log(Level.WARNING, "Not enough stock for book {0}: requested={1}, available={2}", new Object[]{bookId, quantity, stock});
             throw new OutOfStockException("Only " + stock + " items available");
         }
     }

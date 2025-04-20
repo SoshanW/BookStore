@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -22,7 +23,7 @@ public class CustomerDAO {
         int id = idCounter.incrementAndGet();
         customer.setId(id);
         customers.put(id, customer);
-        logger.info("Added customer: " + customer);
+        logger.log(Level.INFO, "Added customer: {0}", customer);
         return customer;
     }
 
@@ -34,30 +35,30 @@ public class CustomerDAO {
     public Customer getCustomerById(int id){
         Customer customer = customers.get(id);
         if (customer == null){
-            logger.warning("Customer not found: " + id);
+            logger.log(Level.WARNING, "Customer not found: {0}", id);
             throw new CustomerNotFoundException("Customer "+id+" not found");
         }
-        logger.info("Fetched customer: " + customer);
+        logger.log(Level.INFO, "Fetched customer: {0}", customer);
         return customer;
     }
 
     public Customer updateCustomer(int id, Customer updatedCustomer){
         if (!customers.containsKey(id)) {
-            logger.warning("Attempted update on missing customer: " + id);
+            logger.log(Level.WARNING, "Attempted update on missing customer: {0}", id);
             throw new CustomerNotFoundException("Cannot Update. Customer "+id+" not found");
         }
         updatedCustomer.setId(id);
         customers.put(id, updatedCustomer);
-        logger.info("Updated customer: " + updatedCustomer);
+        logger.log(Level.INFO, "Updated customer: {0}", updatedCustomer);
         return updatedCustomer;
     }
 
     public void deleteCustomer(int id) {
         if (!customers.containsKey(id)) {
-            logger.warning("Attempted delete on missing customer: " + id);
+            logger.log(Level.WARNING, "Attempted delete on missing customer: {0}", id);
             throw new CustomerNotFoundException("Cannot delete. Customer " + id + " not found");
         }
         customers.remove(id);
-        logger.info("Deleted customer with ID: " + id);
+        logger.log(Level.INFO, "Deleted customer with ID: {0}", id);
     }
 }

@@ -4,6 +4,7 @@ import com.csa.bookstore.entity.Cart;
 import com.csa.bookstore.exception.CartNotFoundException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -21,16 +22,16 @@ public class CartDAO {
                 item == null ? new Cart(bookId, quantity) : new Cart(bk, item.getQuantity() + quantity));
             return v;
         });
-        logger.info("Added item to cart: customerId=" + customerId + ", bookId=" + bookId + ", quantity=" + quantity);
+        logger.log(Level.INFO, "Added item to cart: customerId={0}, bookId={1}, quantity={2}", new Object[]{customerId, bookId, quantity});
     }
 
     public Map<String, Cart> getCart(int customerId){
         Map<String, Cart> cart = carts.get(customerId);
         if (cart == null) {
-            logger.warning("Cart not found for customer: " + customerId);
+            logger.log(Level.WARNING, "Cart not found for customer: {0}", customerId);
             throw new CartNotFoundException("Cart for customer "+customerId+" not found");
         }
-        logger.info("Fetched cart for customer: " + customerId);
+        logger.log(Level.INFO, "Fetched cart for customer: {0}", customerId);
         return cart;
     }
 
@@ -42,7 +43,7 @@ public class CartDAO {
             });
             return v;
         });
-        logger.info("Updated item in cart: customerId=" + customerId + ", bookId=" + bookId + ", quantity=" + quantity);
+        logger.log(Level.INFO, "Updated item in cart: customerId={0}, bookId={1}, quantity={2}", new Object[]{customerId, bookId, quantity});
     }
 
     public void removeItem(int customerId, String bookId){
@@ -50,11 +51,11 @@ public class CartDAO {
             v.remove(bookId);
             return v;
         });
-        logger.info("Removed item from cart: customerId=" + customerId + ", bookId=" + bookId);
+        logger.log(Level.INFO, "Removed item from cart: customerId={0}, bookId={1}", new Object[]{customerId, bookId});
     }
 
     public void clearCart(int customerId){
         carts.remove(customerId);
-        logger.info("Cleared cart for customer: " + customerId);
+        logger.log(Level.INFO, "Cleared cart for customer: {0}", customerId);
     }
 }

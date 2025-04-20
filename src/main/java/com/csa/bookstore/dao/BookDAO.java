@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -30,7 +31,7 @@ public class BookDAO {
         String id = String.valueOf(idCounter.incrementAndGet());
         book.setISBN(id);
         books.put(id, book);
-        logger.info("Added book: " + book);
+        logger.log(Level.INFO, "Added book: {0}", book);
         return book;
     }
 
@@ -42,30 +43,30 @@ public class BookDAO {
     public Book getBookById(String id){
         Book book = books.get(id);
         if(book == null) {
-            logger.warning("Book not found: " + id);
+            logger.log(Level.WARNING, "Book not found: {0}", id);
             throw new BookNotFoundException("Book "+id+" not found");
         }
-        logger.info("Fetched book: " + book);
+        logger.log(Level.INFO, "Fetched book: {0}", book);
         return book;
     }
 
     public Book updateBook(String id, Book updatedBook){
         if(!books.containsKey(id)){
-            logger.warning("Attempted update on missing book: " + id);
+            logger.log(Level.WARNING, "Attempted update on missing book: {0}", id);
             throw new BookNotFoundException("Cannot update. Book with ID "+id+" not found");
         }
         updatedBook.setISBN(id);
         books.put(id, updatedBook);
-        logger.info("Updated book: " + updatedBook);
+        logger.log(Level.INFO, "Updated book: {0}", updatedBook);
         return updatedBook;
     }
 
     public void deleteBook(String id){
         if(!books.containsKey(id)){
-            logger.warning("Attempted delete on missing book: " + id);
+            logger.log(Level.WARNING, "Attempted delete on missing book: {0}", id);
             throw new BookNotFoundException("Cannot delete. Book with ID "+id+" not found");
         }
         books.remove(id);
-        logger.info("Deleted book with ID: " + id);
+        logger.log(Level.INFO, "Deleted book with ID: {0}", id);
     }
 }

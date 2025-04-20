@@ -3,6 +3,7 @@ package com.csa.bookstore.resource;
 import com.csa.bookstore.dao.BookDAO;
 import com.csa.bookstore.entity.Book;
 import java.net.URI;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -31,10 +32,10 @@ public class BookResource {
 
     @POST
     public Response addBook(Book book, @Context UriInfo uriInfo){
-        logger.info("POST /books - Adding book: " + book);
+        logger.log(Level.INFO, "POST /books - Adding book: {0}", book);
         Book addedBook = bookDAO.addBook(book);
         URI uri = uriInfo.getAbsolutePathBuilder().path(addedBook.getISBN()).build();
-        logger.info("Book created with ISBN: " + addedBook.getISBN());
+        logger.log(Level.INFO, "Book created with ISBN: {0}", addedBook.getISBN());
         return Response.created(uri).entity(addedBook).build();
     }
 
@@ -47,21 +48,21 @@ public class BookResource {
     @GET
     @Path("/{id}")
     public Response getBookById(@PathParam("id") String id){
-        logger.info("GET /books/" + id + " - Fetching book by ID");
+        logger.log(Level.INFO, "GET /books/{0} - Fetching book by ID", id);
         return Response.ok(bookDAO.getBookById(id)).build();
     }
 
     @PUT
     @Path("/{id}")
     public Response updateBook(@PathParam("id") String id, Book updatedBook){
-        logger.info("PUT /books/" + id + " - Updating book: " + updatedBook);
+        logger.log(Level.INFO, "PUT /books/{0} - Updating book: {1}", new Object[]{id, updatedBook});
         return Response.ok(bookDAO.updateBook(id, updatedBook)).build();
     }
 
     @DELETE
     @Path("/{id}")
     public Response deleteBook(@PathParam("id") String id){
-        logger.info("DELETE /books/" + id + " - Deleting book");
+        logger.log(Level.INFO, "DELETE /books/{0} - Deleting book", id);
         bookDAO.deleteBook(id);
         return Response.noContent().build();
     }

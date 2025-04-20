@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -28,7 +29,7 @@ public class OrderDAO {
         order.setOrderDate(new Date());
         order.setStatus("PROCESSING");
         orders.put(order.getId(), order);
-        logger.info("Created order: " + order);
+        logger.log(Level.INFO, "Created order: {0}", order);
         return order;
     }
 
@@ -39,17 +40,17 @@ public class OrderDAO {
                 result.add(order);
             }
         }
-        logger.info("Fetched orders for customer: " + customerId);
+        logger.log(Level.INFO, "Fetched orders for customer: {0}", customerId);
         return result;
     }
 
     public Order getOrderById(int orderId){
         Order order = orders.get(orderId);
         if(order == null){
-            logger.warning("Order not found: " + orderId);
+            logger.log(Level.WARNING, "Order not found: {0}", orderId);
             throw new OrderNotFoundException("Order "+orderId+ " not found");
         }
-        logger.info("Fetched order: " + order);
+        logger.log(Level.INFO, "Fetched order: {0}", order);
         return order;
     }
 }

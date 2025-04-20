@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -25,7 +26,7 @@ public class AuthorDAO {
         int id = idCounter.incrementAndGet();
         author.setId(id);
         authors.put(id, author);
-        logger.info("Added author: " + author);
+        logger.log(Level.INFO, "Added author: {0}", author);
         return author;
     }
 
@@ -37,30 +38,30 @@ public class AuthorDAO {
     public Author getAuthorById(int id){
         Author author = authors.get(id);
         if(author == null) {
-            logger.warning("Author not found: " + id);
+            logger.log(Level.WARNING, "Author not found: {0}", id);
             throw new AuthorNotFoundException("Author "+id+" not found");
         }
-        logger.info("Fetched author: " + author);
+        logger.log(Level.INFO, "Fetched author: {0}", author);
         return author;
     }
 
     public Author updateAuthor(int id, Author updatedAuthor){
         if(!authors.containsKey(id)){
-            logger.warning("Attempted update on missing author: " + id);
+            logger.log(Level.WARNING, "Attempted update on missing author: {0}", id);
             throw new AuthorNotFoundException("Cannot update. Author with ID "+id+" not found");
         }
         updatedAuthor.setId(id);
         authors.put(id, updatedAuthor);
-        logger.info("Updated author: " + updatedAuthor);
+        logger.log(Level.INFO, "Updated author: {0}", updatedAuthor);
         return updatedAuthor;
     }
 
     public void deleteAuthor(int id){
         if(!authors.containsKey(id)){
-            logger.warning("Attempted delete on missing author: " + id);
+            logger.log(Level.WARNING, "Attempted delete on missing author: {0}", id);
             throw new AuthorNotFoundException("Cannot delete. Author with ID "+id+" not found");
         }
         authors.remove(id);
-        logger.info("Deleted author with ID: " + id);
+        logger.log(Level.INFO, "Deleted author with ID: {0}", id);
     }
 }

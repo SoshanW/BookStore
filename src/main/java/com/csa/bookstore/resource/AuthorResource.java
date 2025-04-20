@@ -6,6 +6,7 @@ import com.csa.bookstore.entity.Author;
 import com.csa.bookstore.entity.Book;
 import java.net.URI;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.ws.rs.Consumes;
@@ -36,10 +37,10 @@ public class AuthorResource {
     
      @POST
     public Response addAuthor(Author author, @Context UriInfo uriInfo){
-        logger.info("POST /authors - Adding author: " + author);
+        logger.log(Level.INFO, "POST /authors - Adding author: {0}", author);
         Author created = authorDAO.addAuthor(author);
         URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(created.getId())).build();
-        logger.info("Author created with ID: " + created.getId());
+        logger.log(Level.INFO, "Author created with ID: {0}", created.getId());
         return Response.created(uri).entity(created).build();
     }
 
@@ -52,21 +53,21 @@ public class AuthorResource {
     @GET
     @Path("/{id}")
     public Response getAuthorById(@PathParam("id") int id) {
-        logger.info("GET /authors/" + id + " - Fetching author by ID");
+        logger.log(Level.INFO, "GET /authors/{0} - Fetching author by ID", id);
         return Response.ok(authorDAO.getAuthorById(id)).build();
     }
 
     @PUT
     @Path("/{id}")
     public Response updateAuthor(@PathParam("id") int id, Author updatedAuthor) {
-        logger.info("PUT /authors/" + id + " - Updating author: " + updatedAuthor);
+        logger.log(Level.INFO, "PUT /authors/{0} - Updating author: {1}", new Object[]{id, updatedAuthor});
         return Response.ok(authorDAO.updateAuthor(id, updatedAuthor)).build();
     }
 
     @DELETE
     @Path("/{id}")
     public Response deleteAuthor(@PathParam("id") int id) {
-        logger.info("DELETE /authors/" + id + " - Deleting author");
+        logger.log(Level.INFO, "DELETE /authors/{0} - Deleting author", id);
         authorDAO.deleteAuthor(id);
         return Response.noContent().build();
     }
@@ -74,7 +75,7 @@ public class AuthorResource {
     @GET
     @Path("/{id}/books")
     public Response getBooksByAuthor(@PathParam("id") int id) {
-        logger.info("GET /authors/" + id + "/books - Fetching books by author");
+        logger.log(Level.INFO, "GET /authors/{0}/books - Fetching books by author", id);
         Author author = authorDAO.getAuthorById(id);
         List<Book> books = bookDAO.getAllBooks().stream()
                 .filter(book -> book.getAuthor().equalsIgnoreCase(author.getName()))

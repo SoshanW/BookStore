@@ -34,7 +34,7 @@ public class OrderResource {
 
     @POST
     public Response createOrder(@PathParam("customerId") int customerId) {
-        logger.info("POST /customers/" + customerId + "/orders - Creating order for customer");
+        logger.log(Level.INFO, "POST /customers/{0}/orders - Creating order for customer", customerId);
         try {
             customerDAO.getCustomerById(customerId);
             Map<String, Cart> cartItems = cartDAO.getCart(customerId);
@@ -48,7 +48,7 @@ public class OrderResource {
             double total = calculateTotal(itemQuantities);
             Order order = orderDAO.createOrder(customerId, itemQuantities, total);
             cartDAO.clearCart(customerId);
-            logger.info("Order created for customer " + customerId + " with order ID: " + order.getId());
+            logger.log(Level.INFO, "Order created for customer {0} with order ID: {1}", new Object[]{customerId, order.getId()});
             return Response.ok(order).build();
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Error creating order for customer " + customerId, e);
@@ -58,7 +58,7 @@ public class OrderResource {
 
     @GET
     public Response getOrdersByCustomerId(@PathParam("customerId") int customerId) {
-        logger.info("GET /customers/" + customerId + "/orders - Fetching orders for customer");
+        logger.log(Level.INFO, "GET /customers/{0}/orders - Fetching orders for customer", customerId);
         customerDAO.getCustomerById(customerId);
         return Response.ok(orderDAO.gerOrderByCustomer(customerId)).build();
     }
@@ -67,7 +67,7 @@ public class OrderResource {
     @Path("/{orderId}")
     public Response getOrderByOrderId(@PathParam("customerId") int customerId,
                                       @PathParam("orderId") int orderId) {
-        logger.info("GET /customers/" + customerId + "/orders/" + orderId + " - Fetching order by ID");
+        logger.log(Level.INFO, "GET /customers/{0}/orders/{1} - Fetching order by ID", new Object[]{customerId, orderId});
         customerDAO.getCustomerById(customerId);
         return Response.ok(orderDAO.getOrderById(orderId)).build();
     }
@@ -77,7 +77,7 @@ public class OrderResource {
                 .mapToDouble(entry ->
                     bookDAO.getBookById(entry.getKey()).getPrice() * entry.getValue())
                 .sum();
-        logger.fine("Calculated order total: " + total);
+        logger.log(Level.FINE, "Calculated order total: {0}", total);
         return total;
     }
 }
