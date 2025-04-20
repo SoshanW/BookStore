@@ -11,7 +11,7 @@ http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
         </servlet-class>
         <init-param>
             <param-name>jersey.config.server.provider.packages</param-name>
-            <param-value>com.csa.bookstore.resource</param-value>
+            <param-value>com.csa.bookstore</param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
