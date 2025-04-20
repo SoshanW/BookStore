@@ -3,6 +3,7 @@ package com.csa.bookstore.resource;
 import com.csa.bookstore.dao.BookDAO;
 import com.csa.bookstore.dao.CartDAO;
 import com.csa.bookstore.dao.CustomerDAO;
+import com.csa.bookstore.entity.Book;
 import com.csa.bookstore.entity.Cart;
 import com.csa.bookstore.exception.OutOfStockException;
 import java.util.Map;
@@ -85,10 +86,26 @@ public class CartResource {
     @Path("/items/{bookId}")
     public Response removeItem(@PathParam("customerId") int customerId,
                               @PathParam("bookId") String bookId) {
-        logger.log(Level.INFO, "DELETE /customer/{0}/cart/items/{1} - Removing item", new Object[]{customerId, bookId});
+        logger.log(Level.INFO, "DELETE /customer/{0}/cart/items/{1} - Removing item", 
+            new Object[]{customerId, bookId});
+        
         validateCustomer(customerId);
-        cartDAO.removeItem(customerId, bookId);
-        logger.log(Level.INFO, "Item removed from cart for customer {0}, book {1}", new Object[]{customerId, bookId});
+        
+        // Get quantity before removal
+        Cart item = cartDAO.getCart(customerId).get(bookId);
+        if(item != null) {
+            int quantityToRestore = item.getQuantity();
+            
+            // Remove from cart first
+            cartDAO.removeItem(customerId, bookId);
+            
+            // Restore stock
+            Book book = bookDAO.getBookById(bookId);
+            book.setStockQuantity(book.getStockQuantity() + quantityToRestore);
+            logger.log(Level.INFO, "Restored {0} units of book {1}", 
+                new Object[]{quantityToRestore, bookId});
+        }
+        
         return Response.noContent().build();
     }
 
@@ -97,8 +114,21 @@ public class CartResource {
     public Response clearCart(@PathParam("customerId") int customerId) {
         logger.log(Level.INFO, "DELETE /customer/{0}/cart/items - Clearing cart", customerId);
         validateCustomer(customerId);
+        
+        // Get all items before clearing
+        Map<String, Cart> cartItems = cartDAO.getCart(customerId);
+        
+        // Restore stock for all items
+        cartItems.forEach((bookId, cartItem) -> {
+            Book book = bookDAO.getBookById(bookId);
+            book.setStockQuantity(book.getStockQuantity() + cartItem.getQuantity());
+            logger.log(Level.INFO, "Restored {0} units of book {1}", 
+                new Object[]{cartItem.getQuantity(), bookId});
+        });
+        
+        // Clear cart after restoring stock
         cartDAO.clearCart(customerId);
-        logger.log(Level.INFO, "Cart cleared for customer {0}", customerId);
+        
         return Response.noContent().build();
     }
 
