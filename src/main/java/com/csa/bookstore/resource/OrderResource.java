@@ -7,6 +7,7 @@ import com.csa.bookstore.dao.OrderDAO;
 import com.csa.bookstore.entity.Cart;
 import com.csa.bookstore.entity.Order;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.ws.rs.GET;

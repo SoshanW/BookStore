@@ -4,6 +4,7 @@ import com.csa.bookstore.dao.CustomerDAO;
 import com.csa.bookstore.entity.Customer;
 import com.csa.bookstore.exception.InvalidInputException;
 import java.net.URI;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
