@@ -6,6 +6,7 @@ import com.csa.bookstore.entity.Author;
 import com.csa.bookstore.entity.Book;
 import java.net.URI;
 import java.util.List;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -30,42 +31,50 @@ import javax.ws.rs.core.UriInfo;
 public class AuthorResource {
     private final AuthorDAO authorDAO = new AuthorDAO();
     private final BookDAO bookDAO = new BookDAO();
+    private static final Logger logger = Logger.getLogger(AuthorResource.class.getName());
 
     
-    @POST
+     @POST
     public Response addAuthor(Author author, @Context UriInfo uriInfo){
+        logger.info("POST /authors - Adding author: " + author);
         Author created = authorDAO.addAuthor(author);
         URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(created.getId())).build();
+        logger.info("Author created with ID: " + created.getId());
         return Response.created(uri).entity(created).build();
     }
-    
+
     @GET
     public Response getAllAuthors() {
+        logger.info("GET /authors - Fetching all authors");
         return Response.ok(authorDAO.getAllAuthors()).build();
     }
 
     @GET
     @Path("/{id}")
     public Response getAuthorById(@PathParam("id") int id) {
+        logger.info("GET /authors/" + id + " - Fetching author by ID");
         return Response.ok(authorDAO.getAuthorById(id)).build();
     }
 
     @PUT
     @Path("/{id}")
     public Response updateAuthor(@PathParam("id") int id, Author updatedAuthor) {
+        logger.info("PUT /authors/" + id + " - Updating author: " + updatedAuthor);
         return Response.ok(authorDAO.updateAuthor(id, updatedAuthor)).build();
     }
 
     @DELETE
     @Path("/{id}")
     public Response deleteAuthor(@PathParam("id") int id) {
+        logger.info("DELETE /authors/" + id + " - Deleting author");
         authorDAO.deleteAuthor(id);
         return Response.noContent().build();
     }
-    
+
     @GET
     @Path("/{id}/books")
     public Response getBooksByAuthor(@PathParam("id") int id) {
+        logger.info("GET /authors/" + id + "/books - Fetching books by author");
         Author author = authorDAO.getAuthorById(id);
         List<Book> books = bookDAO.getAllBooks().stream()
                 .filter(book -> book.getAuthor().equalsIgnoreCase(author.getName()))
