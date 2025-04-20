@@ -83,7 +83,7 @@ public class AuthorResource {
         logger.log(Level.INFO, "GET /authors/{0}/books - Fetching books by author", id);
         Author author = authorDAO.getAuthorById(id);
         List<Book> books = bookDAO.getAllBooks().stream()
-                .filter(book -> book.getAuthor().equalsIgnoreCase(author.getName()))
+                .filter(book -> book.getAuthorName().equalsIgnoreCase(author.getName()))
                 .collect(Collectors.toList());
         return Response.ok(books).build();
     }

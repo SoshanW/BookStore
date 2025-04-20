@@ -8,18 +8,20 @@ package com.csa.bookstore.entity;
 public class Book {
     
     private String title;
-    private String author;
+    private int authorId;
     private String ISBN;
     private int publicationYear;
     private double price;
     private int stockQuantity;
+    
+    private transient String authorName;
 
     public Book() {
     }
 
-    public Book(String title, String author, String ISBN, int publicationYear, double price, int stockQuantity) {
+    public Book(String title, int authorId, String ISBN, int publicationYear, double price, int stockQuantity) {
         this.title = title;
-        this.author = author;
+        this.authorId = authorId;
         this.ISBN = ISBN;
         this.publicationYear = publicationYear;
         this.price = price;
@@ -34,12 +36,12 @@ public class Book {
         this.title = title;
     }
 
-    public String getAuthor() {
-        return author;
+    public int getAuthorId() {
+        return authorId;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
+    public void setAuthorId(int authorId) {
+        this.authorId = authorId;
     }
 
     public String getISBN() {
@@ -74,9 +76,16 @@ public class Book {
         this.stockQuantity = stockQuantity;
     }
 
+    public String getAuthorName() {
+        return authorName;
+    }
+
+    public void setAuthorName(String authorName) {
+        this.authorName = authorName;
+    }
+
     @Override
     public String toString() {
-        return "Book{" + "title=" + title + ", author=" + author + ", ISBN=" + ISBN + ", publicationYear=" + publicationYear + ", price=" + price + ", stockQuantity=" + stockQuantity + '}';
+        return "Book{" + "title=" + title + ", authorId=" + authorId + ", ISBN=" + ISBN + ", publicationYear=" + publicationYear + ", price=" + price + ", stockQuantity=" + stockQuantity + ", authorName=" + authorName + '}';
     }
-    
 }
