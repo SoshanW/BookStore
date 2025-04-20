@@ -48,14 +48,14 @@ public class OrderResource {
     }
 
     @GET
-    public Response getOrders(@PathParam("customerId") int customerId) {
+    public Response getOrdersByCustomerId(@PathParam("customerId") int customerId) {
         customerDAO.getCustomerById(customerId);
         return Response.ok(orderDAO.gerOrderByCustomer(customerId)).build();
     }
 
     @GET
     @Path("/{orderId}")
-    public Response getOrder(@PathParam("customerId") int customerId, 
+    public Response getOrderByOrderId(@PathParam("customerId") int customerId, 
                             @PathParam("orderId") int orderId) {
         customerDAO.getCustomerById(customerId);
         return Response.ok(orderDAO.getOrderById(orderId)).build();
