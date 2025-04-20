@@ -4,6 +4,7 @@ import com.csa.bookstore.dao.AuthorDAO;
 import com.csa.bookstore.dao.BookDAO;
 import com.csa.bookstore.entity.Author;
 import com.csa.bookstore.entity.Book;
+import com.csa.bookstore.exception.InvalidInputException;
 import java.net.URI;
 import java.util.List;
 import java.util.logging.Level;
@@ -37,6 +38,10 @@ public class AuthorResource {
     
      @POST
     public Response addAuthor(Author author, @Context UriInfo uriInfo){
+        
+        if (author.getName() == null || author.getName().trim().isEmpty()) {
+            throw new InvalidInputException("Author name is required.");
+        }
         logger.log(Level.INFO, "POST /authors - Adding author: {0}", author);
         Author created = authorDAO.addAuthor(author);
         URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(created.getId())).build();

@@ -2,6 +2,7 @@ package com.csa.bookstore.resource;
 
 import com.csa.bookstore.dao.BookDAO;
 import com.csa.bookstore.entity.Book;
+import com.csa.bookstore.exception.InvalidInputException;
 import java.net.URI;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,6 +33,15 @@ public class BookResource {
 
     @POST
     public Response addBook(Book book, @Context UriInfo uriInfo){
+        
+        if (book.getTitle() == null || book.getTitle().trim().isEmpty()
+            || book.getAuthor() == null || book.getAuthor().trim().isEmpty()
+            || book.getPrice() <= 0
+            || book.getStockQuantity() < 0) {
+            
+            throw new InvalidInputException("Invalid book data. Title, author, positive price, and non-negative stockQuantity are required.");
+        }
+        
         logger.log(Level.INFO, "POST /books - Adding book: {0}", book);
         Book addedBook = bookDAO.addBook(book);
         URI uri = uriInfo.getAbsolutePathBuilder().path(addedBook.getISBN()).build();

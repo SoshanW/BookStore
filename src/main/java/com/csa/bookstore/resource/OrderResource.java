@@ -6,6 +6,7 @@ import com.csa.bookstore.dao.CustomerDAO;
 import com.csa.bookstore.dao.OrderDAO;
 import com.csa.bookstore.entity.Cart;
 import com.csa.bookstore.entity.Order;
+import com.csa.bookstore.exception.InvalidInputException;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,10 +35,22 @@ public class OrderResource {
 
     @POST
     public Response createOrder(@PathParam("customerId") int customerId) {
+        
         logger.log(Level.INFO, "POST /customers/{0}/orders - Creating order for customer", customerId);
         try {
             customerDAO.getCustomerById(customerId);
-            Map<String, Cart> cartItems = cartDAO.getCart(customerId);
+        
+            Map<String, Cart> cartItems;
+            try {
+                cartItems = cartDAO.getCart(customerId);
+            } catch (Exception e) {
+                logger.log(Level.WARNING, "Cart is empty or not found for customer {0}", customerId);
+                throw new InvalidInputException("Cart is empty. Cannot create order.");
+            }     
+            
+            if (cartItems == null || cartItems.isEmpty()) {
+                throw new InvalidInputException("Cart is empty. Cannot create order.");
+            }
 
             Map<String, Integer> itemQuantities = cartItems.entrySet().stream()
                 .collect(Collectors.toMap(

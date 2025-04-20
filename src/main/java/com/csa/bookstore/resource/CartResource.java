@@ -5,6 +5,7 @@ import com.csa.bookstore.dao.CartDAO;
 import com.csa.bookstore.dao.CustomerDAO;
 import com.csa.bookstore.entity.Book;
 import com.csa.bookstore.entity.Cart;
+import com.csa.bookstore.exception.InvalidInputException;
 import com.csa.bookstore.exception.OutOfStockException;
 import java.util.Map;
 import java.util.logging.Level;
@@ -38,6 +39,13 @@ public class CartResource {
     @POST
     @Path("/items")
     public Response addItem(@PathParam("customerId") int customerId, Cart cart){
+        
+        if (cart == null
+            || cart.getBookId() == null || cart.getBookId().trim().isEmpty()
+            || cart.getQuantity() <= 0) {
+            
+            throw new InvalidInputException("Invalid cart item. BookId and positive quantity are required.");
+        }
         logger.log(Level.INFO, "POST /customer/{0}/cart/items - Adding item: {1}", new Object[]{customerId, cart});
         validateCustomer(customerId);
         validateBook(cart.getBookId());
